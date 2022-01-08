@@ -8,14 +8,14 @@ import scala.scalajs.js
 
 
 private[osdetect] trait OSDetectCompanionPlatform {
-  private[this] val os = js.Dynamic.global.require("os")
+  private[this] val osT = Try(js.Dynamic.global.require("os"))
 
   def getRawOS[F[_]: Sync]: F[String] = {
     Sync[F].defer(platformOS.liftTo[F])
   }
 
   private[this] def platformOS: Try[String] = {
-    Try(os.platform().asInstanceOf[String])
+    osT.flatMap(os => Try(os.platform().asInstanceOf[String]))
   }
 
   def getRawArch[F[_]: Sync]: F[String] = {
@@ -23,7 +23,7 @@ private[osdetect] trait OSDetectCompanionPlatform {
   }
 
   private[this] def platformArch: Try[String] = {
-    Try(os.arch().asInstanceOf[String])
+    osT.flatMap(os => Try(os.arch().asInstanceOf[String]))
   }
 
   def getRawVersion[F[_]: Sync]: F[String] = {
@@ -31,6 +31,6 @@ private[osdetect] trait OSDetectCompanionPlatform {
   }
 
   private[this] def platformVersion: Try[String] = {
-    Try(os.version().asInstanceOf[String])
+    osT.flatMap(os => Try(os.version().asInstanceOf[String]))
   }
 }
