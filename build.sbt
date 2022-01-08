@@ -29,7 +29,6 @@ lazy val core = crossProject(JVMPlatform, JSPlatform)
 
     )
   ).jsSettings(
-    scalaJSUseMainModuleInitializer := true,
     scalaJSLinkerConfig ~= { _.withModuleKind(ModuleKind.CommonJSModule)},
   )
 
